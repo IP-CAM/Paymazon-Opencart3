@@ -1,10 +1,10 @@
 <?php
-class ControllerExtensionPaymentPaymazonkbank extends Controller {
+class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 
 	private $error = array();
 
 	public function index() {
-		$this->load->language('extension/payment/paymazonkbank');
+		$this->load->language('extension/payment/paymazontmnwallet');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -18,17 +18,17 @@ class ControllerExtensionPaymentPaymazonkbank extends Controller {
 			if (isset($validate_return['result'])) {
 				if ($validate_return['result'] === TRUE) {
 					$this->settings = array(
-						'payment_paymazonkbank_new_status' => 1,
-						'payment_paymazonkbank_pending_status' => '1',
-						'payment_paymazonkbank_complete_status' => '5',
-						'payment_paymazonkbank_success_status' => '5',
-						'payment_paymazonkbank_canceled_status' => '7',
-						'payment_paymazonkbank_failed_status' => '10',
-						'payment_paymazonkbank_waiting_status' => '2',
-						'payment_paymazonkbank_pgcode' => 'kbank-pgpayment', // DO NOT CHANGE THIS!
+						'payment_paymazontmnwallet_new_status' => 1,
+						'payment_paymazontmnwallet_pending_status' => '1',
+						'payment_paymazontmnwallet_complete_status' => '5',
+						'payment_paymazontmnwallet_success_status' => '5',
+						'payment_paymazontmnwallet_canceled_status' => '7',
+						'payment_paymazontmnwallet_failed_status' => '10',
+						'payment_paymazontmnwallet_waiting_status' => '2',
+						'payment_paymazontmnwallet_pgcode' => 'tmn-wallet', // DO NOT CHANGE THIS!
 					);
 					$this->settings = array_merge($this->settings, $this->request->post);
-					$this->model_setting_setting->editSetting('payment_paymazonkbank', $this->settings);
+					$this->model_setting_setting->editSetting('payment_paymazontmnwallet', $this->settings);
 					$this->session->data['success'] = $this->language->get('text_success');
 					$this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
 				}
@@ -57,8 +57,8 @@ class ControllerExtensionPaymentPaymazonkbank extends Controller {
 		} else {
 			$data['error_shared_key'] = false;
 		}
-		if (isset($this->error['paymazonkbank_currency_conversion'])) {
-			$data['error_currency_conversion'] = $this->error['paymazonkbank_currency_conversion'];
+		if (isset($this->error['paymazontmnwallet_currency_conversion'])) {
+			$data['error_currency_conversion'] = $this->error['paymazontmnwallet_currency_conversion'];
 		} else {
 			$data['error_currency_conversion'] = false;
 		}
@@ -73,28 +73,28 @@ class ControllerExtensionPaymentPaymazonkbank extends Controller {
 		);
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('extension/payment/paymazonkbank', 'user_token=' . $this->session->data['user_token'], true)
+			'href' => $this->url->link('extension/payment/paymazontmnwallet', 'user_token=' . $this->session->data['user_token'], true)
 		);
-		$data['action'] = $this->url->link('extension/payment/paymazonkbank', 'user_token=' . $this->session->data['user_token'], true);
+		$data['action'] = $this->url->link('extension/payment/paymazontmnwallet', 'user_token=' . $this->session->data['user_token'], true);
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'].'&type=payment', true);
 
 		$inputs = array(
-			'payment_paymazonkbank_display_name',
-			'payment_paymazonkbank_minimum_total',
-			'payment_paymazonkbank_environment',
-			'payment_paymazonkbank_merchant_id',
-			'payment_paymazonkbank_shared_key',
-			'payment_paymazonkbank_order_status_id',
-			'payment_paymazonkbank_geo_zone_id',
-			'payment_paymazonkbank_sort_order',
-			'payment_paymazonkbank_3d_secure',
-			'payment_paymazonkbank_currency_conversion',
-			'payment_paymazonkbank_status',
-			'payment_paymazonkbank_expiry_duration',
-			'payment_paymazonkbank_expiry_unit',
-			'payment_paymazonkbank_custom_field1',
-			'payment_paymazonkbank_custom_field2',
-			'payment_paymazonkbank_custom_field3',
+			'payment_paymazontmnwallet_display_name',
+			'payment_paymazontmnwallet_minimum_total',
+			'payment_paymazontmnwallet_environment',
+			'payment_paymazontmnwallet_merchant_id',
+			'payment_paymazontmnwallet_shared_key',
+			'payment_paymazontmnwallet_order_status_id',
+			'payment_paymazontmnwallet_geo_zone_id',
+			'payment_paymazontmnwallet_sort_order',
+			'payment_paymazontmnwallet_3d_secure',
+			'payment_paymazontmnwallet_currency_conversion',
+			'payment_paymazontmnwallet_status',
+			'payment_paymazontmnwallet_expiry_duration',
+			'payment_paymazontmnwallet_expiry_unit',
+			'payment_paymazontmnwallet_custom_field1',
+			'payment_paymazontmnwallet_custom_field2',
+			'payment_paymazontmnwallet_custom_field3',
 		);
 		foreach ($inputs as $input) {
 			if (isset($this->request->post[$input])) {
@@ -123,35 +123,35 @@ class ControllerExtensionPaymentPaymazonkbank extends Controller {
 		} else {
 			$data['curr'] = false;
 		}
-		$this->response->setOutput($this->load->view('extension/payment/paymazonkbank', $data));
+		$this->response->setOutput($this->load->view('extension/payment/paymazontmnwallet', $data));
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'extension/payment/paymazonkbank')) {
+		if (!$this->user->hasPermission('modify', 'extension/payment/paymazontmnwallet')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 		// check for empty values
-		if (!$this->request->post['payment_paymazonkbank_display_name']) {
+		if (!$this->request->post['payment_paymazontmnwallet_display_name']) {
 			$this->error['display_name'] = $this->language->get('error_display_name');
 		}
 		// default values
-		if (!$this->request->post['payment_paymazonkbank_environment']) {
-				$this->request->post['paymazonkbank_environment'] = 'sandbox';
+		if (!$this->request->post['payment_paymazontmnwallet_environment']) {
+				$this->request->post['paymazontmnwallet_environment'] = 'sandbox';
 		}
 		// check for empty values
-		if (!$this->request->post['payment_paymazonkbank_merchant_id']) {
+		if (!$this->request->post['payment_paymazontmnwallet_merchant_id']) {
 			$this->error['merchant_id'] = $this->language->get('error_merchant_id');
 		}
 		// check for empty values
-		if (!$this->request->post['payment_paymazonkbank_shared_key']) {
+		if (!$this->request->post['payment_paymazontmnwallet_shared_key']) {
 			$this->error['shared_key'] = $this->language->get('error_shared_key');
 		}
 		// check for empty values
-		if (!$this->request->post['payment_paymazonkbank_order_status_id']) {
+		if (!$this->request->post['payment_paymazontmnwallet_order_status_id']) {
 			$this->error['order_status_id'] = $this->language->get('error_order_status_id');
 		}
 		// currency conversion to THB
-		if (!$this->request->post['payment_paymazonkbank_currency_conversion'] && !$this->currency->has('THB')) {
+		if (!$this->request->post['payment_paymazontmnwallet_currency_conversion'] && !$this->currency->has('THB')) {
 			$this->error['currency_conversion'] = $this->language->get('error_currency_conversion');
 		}
 		
@@ -176,23 +176,23 @@ class ControllerExtensionPaymentPaymazonkbank extends Controller {
         $this->load->model('setting/setting');
 
         $this->settings = array(
-            'payment_paymazonkbank_new_status' => 1,
-			'payment_paymazonkbank_pending_status' => '1',
-			'payment_paymazonkbank_complete_status' => '5',
-			'payment_paymazonkbank_success_status' => '5',
-			'payment_paymazonkbank_canceled_status' => '7',
-			'payment_paymazonkbank_failed_status' => '10',
-			'payment_paymazonkbank_waiting_status' => '2',
-			'payment_paymazonkbank_pgcode' => 'kbank-pgpayment', // DO NOT CHANGE THIS!
+            'payment_paymazontmnwallet_new_status' => 1,
+			'payment_paymazontmnwallet_pending_status' => '1',
+			'payment_paymazontmnwallet_complete_status' => '5',
+			'payment_paymazontmnwallet_success_status' => '5',
+			'payment_paymazontmnwallet_canceled_status' => '7',
+			'payment_paymazontmnwallet_failed_status' => '10',
+			'payment_paymazontmnwallet_waiting_status' => '2',
+			'payment_paymazontmnwallet_pgcode' => 'tmn-wallet', // DO NOT CHANGE THIS!
         );
-        $this->model_setting_setting->editSetting('payment_paymazonkbank', $this->settings);
+        $this->model_setting_setting->editSetting('payment_paymazontmnwallet', $this->settings);
         $this->model_extension_payment_paymazon->createPaymazonDataTable();
     }
     public function uninstall() {
         $this->load->model('extension/payment/paymazon');
         $this->load->model('setting/setting');
 
-        $this->model_setting_setting->deleteSetting('payment_paymazonkbank');
+        $this->model_setting_setting->deleteSetting('payment_paymazontmnwallet');
         $this->model_extension_payment_paymazon->deletePaymazonDataTable();
     }
 
