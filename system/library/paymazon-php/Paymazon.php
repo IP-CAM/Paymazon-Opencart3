@@ -103,6 +103,12 @@ Class Paymazon {
 						'zipcode'			=> (isset($input_params['shipping_postcode']) ? $input_params['shipping_postcode'] : ''),
 					),
 				);
+				if (strtolower($pg_code) === 'kbank-smartpay') {
+					$Queryusers['smartpay']	= array(
+						'shopid'					=> (isset($cutom_params['smartpay']['shopid']) ? $cutom_params['smartpay']['shopid'] : ''),
+						'instmonth'					=> (isset($cutom_params['smartpay']['instmonth']) ? $cutom_params['smartpay']['instmonth'] : ''),
+					);
+				}
 				// Merchants
 				$Querymerchants = array(
 					'service'					=> 'myarena',
@@ -325,3 +331,4 @@ Class Paymazon {
 
 
 
+?>
