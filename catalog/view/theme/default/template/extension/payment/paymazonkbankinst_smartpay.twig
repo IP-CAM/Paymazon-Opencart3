@@ -1,0 +1,87 @@
+{% if errors %} 
+	{% for error in errors %}
+		<div class="error">{{ error }}</div>
+	{% endfor %}
+{% else %}
+	<form id="form-paymazon-action" method="post" action="{{ action }}">
+		<fieldset id="payment">
+			<legend>Submit using <span id="action-placeholder">{{ pg_display_name }}</span></legend>
+			<div class="form-group required">
+				<div class="col-sm-3">
+					<label class="control-label" for="input-installment-shopid">{{ entry_installment }}</label>
+					<select name="payment_paymazonkbankinst_installment_shopid" id="input-installment-shopid" class="form-control">
+						{% for shopid in shopids %}
+							<option value="{{ shopid.value }}">{{ shopid.text }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<label class="control-label" for="input-installment-tenor">{{ entry_tenor }}</label>
+					<select name="payment_paymazonkbankinst_installment_instmonth" id="input-installment-tenor" class="form-control">
+						{% for tenor in installment_data[installment_loop] %}
+							{% if tenor.value %}
+								<option value="{{ tenor.value }}">{{ tenor.text }}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="buttons">
+				<div class="pull-right">
+					<input type="button" value="Confirm" id="button-confirm-action" data-loading-text="loading...." class="btn btn-primary" />
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	{% if installment_json %}
+		<script type="text/javascript">
+			var installment_data = {{ installment_json }};
+		</script>
+	{% endif %}
+	<script type="text/javascript">
+		function onSubmitToSmartpay() {
+			$('#form-paymazon-action').submit();
+		}
+		
+		$('#button-confirm-action').bind('click', function() {
+			onSubmitToSmartpay();
+		});
+		
+		/* Active tenor by shopid selected */
+		/*
+		var installment_payment_bank = $("#input-installment-shopid");
+		installment_payment_bank.addEventListener("change", function() {
+			var tenor_innerhtml = "";
+			var loop_i;
+			var loop_length = installment_json[this.value]['terms'].length;
+			for (loop_i = 0; loop_i < loop_length; ++loop_i) {
+				tenor_innerhtml += "<option value='" + installment_json[this.value]['terms'][loop_i]['value'] + "'>" + installment_json[this.value]['tenor'][loop_i]['text'] + "</option>";
+			}
+			installment_payment_tenor.innerHTML = tenor_innerhtml;
+		}, true);
+		*/
+		var loop_i = 0;
+		$(document).on("change", "#input-installment-shopid", function() {
+			$.ajax({
+                type: 'POST',
+                url: '{{ getinstallmenttenors }}',
+				data: {
+					'installment_shopid': $('#input-installment-shopid').val()
+				},
+                cache: false,
+                /* dataType: 'json', */
+                beforeSend: function () {
+                    $('#input-installment-tenor').html('');
+                },
+                complete: function () {
+                    $('#input-installment-tenor').css('cursor', 'pointer');
+                },
+                success: function (response) {
+                    $('#input-installment-tenor').html(response);
+                }
+            });
+		});
+		
+	</script>
+	
+{% endif %}
