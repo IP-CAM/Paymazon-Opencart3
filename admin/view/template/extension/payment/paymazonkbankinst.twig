@@ -4,7 +4,7 @@
 <div class="page-header">
 	<div class="container-fluid">
 		<div class="pull-right">
-			<button type="submit" form="form-paymazon-kbank" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+			<button type="submit" form="form-paymazon-kbank-inst" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
 			<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
 		</div>
 		<h1>{{ heading_title }}</h1>
@@ -31,13 +31,13 @@
 			<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
 		</div>
 		<div class="panel-body">
-			<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-paymazon-kbank" class="form-horizontal">
+			<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-paymazon-kbank-inst" class="form-horizontal">
 				<!-- Status -->
 				<div class="form-group">
-					<label class="col-sm-2 control-label" for="input-paymazonkbank-status"> {{ entry_status }} </label>
+					<label class="col-sm-2 control-label" for="input-paymazonkbankinst-status"> {{ entry_status }} </label>
 					<div class="col-sm-3">
-						<select name="payment_paymazonkbank_status" id="input-paymazonkbank-status" class="form-control">
-							{% if payment_paymazonkbank_status %}
+						<select name="payment_paymazonkbankinst_status" id="input-paymazonkbankinst-status" class="form-control">
+							{% if payment_paymazonkbankinst_status %}
 								<option value="1" selected="selected">{{ text_enabled }}</option>
 								<option value="0">{{ text_disabled }}</option>
 							{% else %}
@@ -51,7 +51,7 @@
 				<div class="form-group required sensitive">
 					<label class="col-sm-2 control-label" for="input-display-name">{{ entry_display_name }}</label>
 					<div class="col-sm-3">
-						<input type="text" name="payment_paymazonkbank_display_name" value="{{ payment_paymazonkbank_display_name }}" placeholder="{{ payment_paymazonkbank_display_name }}" id="input-display-name" class="form-control" />
+						<input type="text" name="payment_paymazonkbankinst_display_name" value="{{ payment_paymazonkbankinst_display_name }}" placeholder="{{ payment_paymazonkbankinst_display_name }}" id="input-display-name" class="form-control" />
 					</div>
 					<div class="col-sm-3">
 						{% if error_display_name %}
@@ -63,7 +63,7 @@
 				<div class="form-group required sensitive">
 					<label class="col-sm-2 control-label" for="input-minimum-total">{{ entry_minimum_total }}</label>
 					<div class="col-sm-3">
-						<input type="text" name="payment_paymazonkbank_minimum_total" value="{{ payment_paymazonkbank_minimum_total }}" placeholder="{{ payment_paymazonkbank_minimum_total }}" id="input-minimum-total" class="form-control" />
+						<input type="text" name="payment_paymazonkbankinst_minimum_total" value="{{ payment_paymazonkbankinst_minimum_total }}" placeholder="{{ payment_paymazonkbankinst_minimum_total }}" id="input-minimum-total" class="form-control" />
 					</div>
 					<div class="col-sm-3">
 						{% if error_minimum_total %}
@@ -75,13 +75,13 @@
 				<div class="form-group sensitive required">
 					<label class="col-sm-2 control-label" for="input-mode">{{ entry_environment }}</label>
 					<div class="col-sm-3">
-						<select name="payment_paymazonkbank_environment" id="input-mode" class="form-control">
-							{% if payment_paymazonkbank_environment == 'sandbox' %}
+						<select name="payment_paymazonkbankinst_environment" id="input-mode" class="form-control">
+							{% if payment_paymazonkbankinst_environment == 'sandbox' %}
 								<option value="sandbox" selected="selected">{{ text_sandbox }}</option>
 							{% else %}
 								<option value="sandbox">{{ text_sandbox }}</option>
 							{% endif %}
-							{% if payment_paymazonkbank_environment == 'live' %}
+							{% if payment_paymazonkbankinst_environment == 'live' %}
 								<option value="live" selected="selected">{{ text_live }}</option>
 							{% else %}
 								<option value="live">{{ text_live }}</option>
@@ -98,9 +98,9 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status }}</label>
 					<div class="col-sm-3">
-						<select name="payment_paymazonkbank_order_status_id" id="input-order-status" class="form-control">
+						<select name="payment_paymazonkbankinst_order_status_id" id="input-order-status" class="form-control">
 							{% for order_status in order_statuses %}
-								{% if order_status.order_status_id == payment_paymazonkbank_order_status_id %}
+								{% if order_status.order_status_id == payment_paymazonkbankinst_order_status_id %}
 									<option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
 								{% else %}
 									<option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
@@ -114,11 +114,11 @@
 						{% endif %}
 					</div>
 				</div>
-
+				<!-- Merchant Id -->
 				<div class="form-group required sensitive">
 					<label class="col-sm-2 control-label" for="input-merchant-id">{{ entry_merchant_id }}</label>
 					<div class="col-sm-3">
-						<input type="text" name="payment_paymazonkbank_merchant_id" value="{{ payment_paymazonkbank_merchant_id }}" placeholder="{{ payment_paymazonkbank_merchant_id }}" id="input-merchant-id" class="form-control" />
+						<input type="text" name="payment_paymazonkbankinst_merchant_id" value="{{ payment_paymazonkbankinst_merchant_id }}" placeholder="{{ payment_paymazonkbankinst_merchant_id }}" id="input-merchant-id" class="form-control" />
 					</div>
 					<div class="col-sm-3">
 						{% if error_merchant_id %}
@@ -126,11 +126,11 @@
 						{% endif %}
 					</div>
 				</div>
-				<!-- Merchant Id -->
+				<!-- Shared Key -->
 				<div class="form-group required sensitive">
 					<label class="col-sm-2 control-label" for="input-shared-key">{{ entry_shared_key }}</label>
 					<div class="col-sm-3">
-						<input type="text" name="payment_paymazonkbank_shared_key" value="{{ payment_paymazonkbank_shared_key }}" placeholder="{{ payment_paymazonkbank_shared_key }}" id="input-shared-key" class="form-control" />
+						<input type="text" name="payment_paymazonkbankinst_shared_key" value="{{ payment_paymazonkbankinst_shared_key }}" placeholder="{{ payment_paymazonkbankinst_shared_key }}" id="input-shared-key" class="form-control" />
 					</div>
 					<div class="col-sm-3">
 						{% if error_shared_key %}
@@ -138,17 +138,44 @@
 						{% endif %}
 					</div>
 				</div>
-				<!-- Shared Key -->
-
+				<!-- Installment Shop IDs -->
+				{% for key, shopid in shopids %}
+					<div class="form-group v2_settings sensitive required">
+						<div class="col-sm-2 control-label">Shop ID</div>
+						<div class="col-sm-3">
+							<label for="input-shopids{{ key }}-value">{{ entry_shopids_value }}</label>
+							<input type="text" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][value]" placeholder="value of shopid"  value="{{ shopid.value }}" id="input-shopids{{ key }}-value" class="form-control" />
+						</div>
+						<div class="col-sm-3">
+							<label for="input-shopids{{ key }}-text">{{ entry_shopids_text }}</label>
+							<input type="text" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][text]" placeholder="text of shopid"  value="{{ shopid.text }}" id="input-shopids{{ key }}-text" class="form-control" />
+						</div>
+						<div class="col-sm-4">
+							<label for="input-shopids{{ key }}-terms">{{ entry_shopids_terms }}</label>
+							{% for tenorKey, tenor in installment_tenors %}
+								<div class="form-control">
+									{% if tenor.value not in shopid.tenors %}
+										<input type="checkbox" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][terms][{{ tenorKey }}][value]" value="{{ tenor.value }}" />
+										<input type="text" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][terms][{{ tenorKey }}][text]" value="{{ tenor.text }}" />
+									{% else %}
+										<input type="checkbox" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][terms][{{ tenorKey }}][value]" value="{{ tenor.value }}" checked="checked" />
+										<input type="text" name="payment_paymazonkbankinst_installment_shopids[{{ key }}][terms][{{ tenorKey }}][text]" value="{{ tenor.text }}" />
+									{% endif %}
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endfor %}
+				
 				<div class="form-group v2_settings sensitive required">
 					<label class="col-sm-2 control-label" for="input-expiry">{{ entry_expiry }}</label>
 					<div class="col-sm-3">
-						<input type="text" name="payment_paymazonkbank_expiry_duration" placeholder="filled with number"  value="{{ payment_paymazonkbank_expiry_duration }}" id="input-expiry" class="form-control" />
+						<input type="text" name="payment_paymazonkbankinst_expiry_duration" placeholder="filled with number"  value="{{ payment_paymazonkbankinst_expiry_duration }}" id="input-expiry" class="form-control" />
 					</div>
 					<div class="col-sm-3">
-						<select name="payment_paymazonkbank_expiry_unit" id="input-expiry-unit" class="form-control">
+						<select name="payment_paymazonkbankinst_expiry_unit" id="input-expiry-unit" class="form-control">
 							{% for expire in expiry  %}
-								{% if expire.unit == payment_paymazonkbank_expiry_unit %}
+								{% if expire.unit == payment_paymazonkbankinst_expiry_unit %}
 									<option value="{{ expire.unit }}" selected="selected">{{ expire.unit }}</option>
 								{% else %}
 									<option value="{{ expire.unit }}">{{ expire.unit }}</option>
@@ -161,13 +188,13 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="input-custom-field">{{ entry_custom_field }}</label>
 					<div class="col-sm-3">
-						<input type="text" id="input-custom-field1" name="payment_paymazonkbank_custom_field1" value="{{ payment_paymazonkbank_custom_field1 }}" placeholder="{{ payment_paymazonkbank_custom_field1 }}" class="form-control" />
+						<input type="text" id="input-custom-field1" name="payment_paymazonkbankinst_custom_field1" value="{{ payment_paymazonkbankinst_custom_field1 }}" placeholder="{{ payment_paymazonkbankinst_custom_field1 }}" class="form-control" />
 					</div>
 					<div class="col-sm-3">
-						<input type="text" id="input-custom-field2" name="payment_paymazonkbank_custom_field2" value="{{ payment_paymazonkbank_custom_field2 }}" placeholder="{{ payment_paymazonkbank_custom_field2 }}" class="form-control" />
+						<input type="text" id="input-custom-field2" name="payment_paymazonkbankinst_custom_field2" value="{{ payment_paymazonkbankinst_custom_field2 }}" placeholder="{{ payment_paymazonkbankinst_custom_field2 }}" class="form-control" />
 					</div>
 					<div class="col-sm-3">
-						<input type="text" id="input-custom-field3" name="payment_paymazonkbank_custom_field3" value="{{ payment_paymazonkbank_custom_field3 }}" placeholder="{{ payment_paymazonkbank_custom_field3 }}" class="form-control" />
+						<input type="text" id="input-custom-field3" name="payment_paymazonkbankinst_custom_field3" value="{{ payment_paymazonkbankinst_custom_field3 }}" placeholder="{{ payment_paymazonkbankinst_custom_field3 }}" class="form-control" />
 					</div>
 					<div class="col-sm-12"></div>
 				</div>
@@ -175,7 +202,7 @@
 				<div class="form-group required">
 					<label class="col-sm-2 control-label" for="input-currency-convertion">{{entry_currency_conversion}}</label>
 					<div class="col-sm-3">
-						<input type="text" id="input-currency-convertion" name="payment_paymazonkbank_currency_conversion" value="{{ payment_paymazonkbank_currency_conversion }}" placeholder="{{ payment_paymazonkbank_currency_conversion }}" class="form-control" />
+						<input type="text" id="input-currency-convertion" name="payment_paymazonkbankinst_currency_conversion" value="{{ payment_paymazonkbankinst_currency_conversion }}" placeholder="{{ payment_paymazonkbankinst_currency_conversion }}" class="form-control" />
 						<span>Set to 1 if your default currency is Thailand Baht</span>
 					</div>
 					<div class="col-sm-3">
@@ -188,10 +215,10 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="input-geo-zone">{{entry_geo_zone}}</label>
 					<div class="col-sm-3">
-						<select name="payment_paymazonkbank_geo_zone_id" id="input-geo-zone" class="form-control">
+						<select name="payment_paymazonkbankinst_geo_zone_id" id="input-geo-zone" class="form-control">
 							<option value="0">{{ text_all_zones }}</option>
 							{% for geo_zone in geo_zones  %}
-								{% if geo_zone.geo_zone_id == payment_paymazonkbank_geo_zone_id %}
+								{% if geo_zone.geo_zone_id == payment_paymazonkbankinst_geo_zone_id %}
 									<option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
 								{% else %}
 									<option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
@@ -205,7 +232,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
 					<div class="col-sm-1">
-						<input size="1" type="text" id="input-sort-order" name="payment_paymazonkbank_sort_order" value="{{ payment_paymazonkbank_sort_order }}" placeholder="{{ payment_paymazonkbank_sort_order }}" class="form-control" />
+						<input size="1" type="text" id="input-sort-order" name="payment_paymazonkbankinst_sort_order" value="{{ payment_paymazonkbankinst_sort_order }}" placeholder="{{ payment_paymazonkbankinst_sort_order }}" class="form-control" />
 					</div>
 				</div>
 	
