@@ -5,13 +5,13 @@
 * https://payment.paymazon.com
 */
 
-class ModelExtensionPaymentPaymazonkbank extends Model {
+class ModelExtensionPaymentpaymazonkbankinst extends Model {
     public function getMethod($address, $total) {
         $this->load->language('extension/payment/paymazon');
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_paymazonkbank_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
-        if ($this->config->get('payment_paymazonkbank_minimum_total') > 0 && $this->config->get('payment_paymazonkbank_minimum_total') > $total) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_paymazonkbankinst_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        if ($this->config->get('payment_paymazonkbankinst_minimum_total') > 0 && $this->config->get('payment_paymazonkbankinst_minimum_total') > $total) {
             $status = false;
-        } elseif (!$this->config->get('payment_paymazonkbank_geo_zone_id')) {
+        } elseif (!$this->config->get('payment_paymazonkbankinst_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -21,10 +21,10 @@ class ModelExtensionPaymentPaymazonkbank extends Model {
         $method_data = array();
         if ($status) {
             $method_data = array(
-                'code'				=> 'paymazonkbank',
-                'title'				=> $this->config->get('payment_paymazonkbank_display_name'),
+                'code'				=> 'paymazonkbankinst',
+                'title'				=> $this->config->get('payment_paymazonkbankinst_display_name'),
                 'terms'				=> '',
-                'sort_order'		=> $this->config->get('payment_paymazonkbank_sort_order')
+                'sort_order'		=> $this->config->get('payment_paymazonkbankinst_sort_order')
             );
         }
         return $method_data;
@@ -138,7 +138,16 @@ class ModelExtensionPaymentPaymazonkbank extends Model {
 		return $this->db->getLastId();
 	}
 	//-------------------------------------------------------
-   
+	public function getInstallmentTenors() {
+		$installment_tenors = array();
+		for ($i = 1; $i < 11; $i++) {
+			$installment_tenors[] = array(
+				'value'		=> sprintf("%02s", $i),
+				'text'		=> sprintf("%02s %s", $i, "Month"),
+			);
+		}
+		return $installment_tenors;
+	}
    
 }
 
