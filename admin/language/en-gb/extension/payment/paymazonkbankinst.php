@@ -1,12 +1,12 @@
 <?php
 // Heading
-$_['heading_title']      	= 'Paymazon With KBank';
+$_['heading_title']      	= 'Paymazon With KBank Installment';
 
 // Text
 $_['text_extension']	 	= 'Extensions';
 $_['text_payment']       	= 'Payment';
-$_['text_success']      	= 'Success: You have modified Paymazon KBank configuration!';
-$_['text_paymazonkbank']	= '<a href="https://payment.paymazon.com" target="_blank"><img src="view/image/payment/paymazon.png" width="120px" alt="Paymazon" title="Paymazon Kbank" style="border: 1px solid #778899;" /></a>';
+$_['text_success']      	= 'Success: You have modified Paymazon KBank Installment configuration!';
+$_['text_paymazonkbankinst']	= '<a href="https://payment.paymazon.com" target="_blank"><img src="view/image/payment/paymazon.png" width="120px" alt="Paymazon" title="Paymazon Kbank" style="border: 1px solid #778899;" /></a>';
 $_['text_live']          	= 'live';
 $_['text_sandbox']       	= 'sandbox';
 $_['text_successful']    	= 'Always Successful';
@@ -26,10 +26,13 @@ $_['entry_expiry']   	 	= 'Custom Expire';
 $_['entry_custom_field'] 	= 'Put Custom Field, For Ref1, Ref2, Ref3';
 $_['entry_minimum_total']	= 'Total minimum for using this payment gateway.';
 $_['entry_currency_conversion'] 	= 'Currency conversion to THB';
-$_['entry_paymazonkbank_success_mapping'] 		= 'Map Payment Success Status to Order Status:';
-$_['entry_paymazonkbank_challenge_mapping'] 	= 'Map Payment Challenge Status to Order Status:';
-$_['entry_paymazonkbank_failure_mapping'] 		= 'Map Payment Failure Status to Order Status:';
+$_['entry_paymazonkbankinst_success_mapping'] 		= 'Map Payment Success Status to Order Status:';
+$_['entry_paymazonkbankinst_challenge_mapping'] 	= 'Map Payment Challenge Status to Order Status:';
+$_['entry_paymazonkbankinst_failure_mapping'] 		= 'Map Payment Failure Status to Order Status:';
 $_['entry_display_name'] 	= 'Display name:';
+$_['entry_shopids_value']	= "Value of ShopID";
+$_['entry_shopids_text']	= "Text of ShopID";
+$_['entry_shopids_terms']	= "Installment Terms of ShopID";
 
 // Error
 $_['error_permission']   			= 'Warning: You do not have permission to modify Paymazon KBank!';
