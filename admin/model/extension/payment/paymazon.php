@@ -21,9 +21,24 @@ class ModelExtensionPaymentPaymazon extends Model {
 		$this->db->query($sql);
     }
 	public function deletePaymazonDataTable() {
-        $sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "payment_paymazon`;";
-        $this->db->query($sql);
+		//$sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "payment_paymazon`;";
+		//$this->db->query($sql);
+		return true;
     }
+	
+	
+	
+	//==========
+	public function getInstallmentTenors() {
+		$installment_tenors = array();
+		for ($i = 1; $i < 11; $i++) {
+			$installment_tenors[] = array(
+				'value'		=> sprintf("%02s", $i),
+				'text'		=> sprintf("%02s %s", $i, "Month"),
+			);
+		}
+		return $installment_tenors;
+	}
 }
 
 
