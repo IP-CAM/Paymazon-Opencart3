@@ -26,6 +26,7 @@ class ControllerExtensionPaymentpaymazonkbankinst extends Controller {
 						'payment_paymazonkbankinst_failed_status' => '10',
 						'payment_paymazonkbankinst_waiting_status' => '2',
 						'payment_paymazonkbankinst_pgcode' => 'kbank-smartpay', // DO NOT CHANGE THIS!
+						'payment_paymasonkbankinst_shopid' => '41', // DO NOT CHANGE THIS!
 					);
 					$this->settings = array_merge($this->settings, $this->request->post);
 					
