@@ -8,6 +8,7 @@ class ModelExtensionPaymentPaymazon extends Model {
 			`order_id` VARCHAR(128) NOT NULL,
 			`request_id` VARCHAR(64) NOT NULL,
 			`paymazon_payment_code` VARCHAR(32) NOT NULL,
+			`paymazon_payment_shopid` SMALLINT(4) NOT NULL DEFAULT '0',
 			`paymazon_payment_id` VARCHAR(128) NOT NULL,
 			`paymazon_payment_status` VARCHAR(16) NOT NULL,
 			`paymazon_datetime_insert` DATETIME NOT NULL,
