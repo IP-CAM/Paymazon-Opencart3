@@ -1,0 +1,27 @@
+{% if errors %} 
+	{% for error in errors %}
+		<div class="error">{{ error }}</div>
+	{% endfor %}
+{% else %}
+	<form id="form-paymazon-create" method="post" action="{{ redirect }}">
+		<fieldset id="payment">
+			<legend>Submit using <span id="redirect-placeholder">{{ pg_display_name }}</span></legend>
+			<div class="buttons">
+				<div class="pull-right">
+					<input type="button" value="Confirm" id="button-confirm" data-loading-text="loading...." class="btn btn-primary" />
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	<script type="text/javascript">
+		function onSubmitToPayment() {
+			$('#form-paymazon-create').submit();
+		}
+		
+		$('#button-confirm').bind('click', function() {
+			onSubmitToPayment();
+		});
+		
+		
+	</script>
+{% endif %}
