@@ -165,13 +165,13 @@ Class Paymazon {
 					foreach ($Querypayments['items'] as &$keval) {
 						$keval['item_name'] = $keval['service'];
 						unset($keval['service']);
-						$keval['item_price'] = sprintf('%.2f', $keval['price']);
+						$keval['item_price'] = sprintf('%.02f', $keval['price']);
 						unset($keval['price']);
 						$keval['item_id'] = $for_i;
 						$keval['item_unit'] = 1;
 						//----------------------
-						$Querypayments['amount'] += ((int)$keval['item_price'] * (int)$keval['item_unit']);
-						$Querypayments['amount'] = sprintf('%.2f', $Querypayments['amount']);
+						$Querypayments['amount'] += sprintf("%.02f", ($keval['item_price'] * $keval['item_unit']));
+						$Querypayments['amount'] = sprintf('%.02f', $Querypayments['amount']);
 						$for_i += 1;
 					}
 				}
