@@ -8,20 +8,20 @@ status code
 -- COMPLETED
 -- SUCCESS
 */
-class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
+class ControllerExtensionPaymentpaymazonkbankinstdyn extends Controller {
 	public $error = FALSE, $error_msg = array();
 	
 	// Load Paymazon Library
 	private function loadPaymazonLib() {
         require_once(DIR_SYSTEM . 'library/paymazon-php/Paymazon.php');
-		Paymazon_Config::setMerchantID($this->config->get('payment_paymazontmnwallet_merchant_id'));
-		Paymazon_Config::setSharedKey($this->config->get('payment_paymazontmnwallet_shared_key'));
-		Paymazon_Config::setEnvironment($this->config->get('payment_paymazontmnwallet_environment'));
-		Paymazon_Config::setPaymentGateway($this->config->get('payment_paymazontmnwallet_pgcode'));
+		Paymazon_Config::setMerchantID($this->config->get('payment_paymazonkbankinstdyn_merchant_id'));
+		Paymazon_Config::setSharedKey($this->config->get('payment_paymazonkbankinstdyn_shared_key'));
+		Paymazon_Config::setEnvironment($this->config->get('payment_paymazonkbankinstdyn_environment'));
+		Paymazon_Config::setPaymentGateway($this->config->get('payment_paymazonkbankinstdyn_pgcode'));
     }
 	private function getOrderData() {
-		$this->load->model('extension/payment/paymazontmnwallet');
-		$this->language->load('extension/payment/paymazontmnwallet');
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
+		$this->language->load('extension/payment/paymazonkbankinstdyn');
         $this->loadPaymazonLib();
         //get order info
         $this->load->model('checkout/order');
@@ -32,24 +32,24 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		$status = "";
 		switch (strtoupper($payment_status)) {
 			case 'FAILED':
-				$status = $this->config->get('payment_paymazontmnwallet_failed_status');
+				$status = $this->config->get('payment_paymazonkbankinstdyn_failed_status');
 			break;
 			case 'CANCELED':
-				$status = $this->config->get('payment_paymazontmnwallet_canceled_status');
+				$status = $this->config->get('payment_paymazonkbankinstdyn_canceled_status');
 			break;
 			case 'COMPLETED':
 			case 'SUCCESS':
-				$status = $this->config->get('payment_paymazontmnwallet_success_status');
+				$status = $this->config->get('payment_paymazonkbankinstdyn_success_status');
 			break;
 			case 'WAITING':
 			default:
-				$status = $this->config->get('payment_paymazontmnwallet_pending_status');
+				$status = $this->config->get('payment_paymazonkbankinstdyn_pending_status');
 			break;
 		}
 		return $status;
 	}
 	private function getRequestParams() {
-		$this->load->model('extension/payment/paymazontmnwallet');
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
 		$this->language->load('extension/payment/paymazon');
 		$this->loadPaymazonLib();
 		//--------------------------------------------------
@@ -63,7 +63,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 	}
 	//===============================================================================================================
 	public function paymentnotify() {
-		$this->load->model('extension/payment/paymazontmnwallet');
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
 		$this->load->model('checkout/order');
 		$this->language->load('extension/payment/paymazon');
 		$this->loadPaymazonLib();
@@ -117,10 +117,11 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 			//----
 			try {
 				$query_params['wheres'] = array(
-					'paymazon_payment_code'		=> $this->config->get('payment_paymazontmnwallet_pgcode'),
+					'paymazon_payment_code'		=> $this->config->get('payment_paymazonkbankinstdyn_pgcode'),
+					'paymazon_payment_shopid'	=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
 					'paymazon_payment_id'		=> $query_params['input']['payment_id'],
 				);
-				$query_params['transaction_data'] = $this->model_extension_payment_paymazontmnwallet->get_order_data_by('payment', '', $query_params['wheres']);
+				$query_params['transaction_data'] = $this->model_extension_payment_paymazonkbankinstdyn->get_order_data_by('payment', '', $query_params['wheres']);
 			} catch (Exception $ex) {
 				$this->error = true;
 				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id";
@@ -129,7 +130,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		if (!$this->error) {
 			if (!isset($query_params['transaction_data']['paymazon_payment_status']) || !isset($query_params['transaction_data']['order_id'])) {
 				$this->error = true;
-				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty.";
+				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty - notify page.";
 			} else {
 				switch (strtoupper($query_params['transaction_data']['paymazon_payment_status'])) {
 					case 'FAILED':
@@ -197,7 +198,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 						'paymazon_payment_status'			=> $query_params['input']['payment_result_status'],
 					);
 					try {
-						$query_params['update_payment_result'] = $this->model_extension_payment_paymazontmnwallet->set_order_data_by('seq', $query_params['transaction_data']['seq'], $query_params['update_params']);
+						$query_params['update_payment_result'] = $this->model_extension_payment_paymazonkbankinstdyn->set_order_data_by('seq', $query_params['transaction_data']['seq'], $query_params['update_params']);
 					} catch (Exception $ex) {
 						$this->error = true;
 						$this->error_msg[] = "Exception error while update payment-result-status";
@@ -224,7 +225,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 	
 	
 	public function paymentredirect() {
-		$this->load->model('extension/payment/paymazontmnwallet');
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
 		$this->load->model('checkout/order');
 		$this->language->load('extension/payment/paymazon');
 		$this->loadPaymazonLib();
@@ -255,10 +256,11 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 			$query_params['input']['payment_id'] = ((is_numeric($query_params['input']['payment_id'])  || is_string($query_params['input']['payment_id'])) ? sprintf("%s", $query_params['input']['payment_id']) : '');
 			try {
 				$query_params['wheres'] = array(
-					'paymazon_payment_code'		=> $this->config->get('payment_paymazontmnwallet_pgcode'),
+					'paymazon_payment_code'		=> $this->config->get('payment_paymazonkbankinstdyn_pgcode'),
+					'paymazon_payment_shopid'	=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
 					'paymazon_payment_id'		=> $query_params['input']['payment_id'],
 				);
-				$query_params['transaction_data'] = $this->model_extension_payment_paymazontmnwallet->get_order_data_by('payment', '', $query_params['wheres']);
+				$query_params['transaction_data'] = $this->model_extension_payment_paymazonkbankinstdyn->get_order_data_by('payment', '', $query_params['wheres']);
 			} catch (Exception $ex) {
 				$this->error = true;
 				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id";
@@ -267,7 +269,8 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		if (!$this->error) {
 			if (!isset($query_params['transaction_data']['paymazon_payment_status']) || !isset($query_params['transaction_data']['order_id'])) {
 				$this->error = true;
-				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty.";
+				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty - redirect page.";
+				$this->error_msg[] = $query_params;
 			} else {
 				$query_params['order_data'] = $this->model_checkout_order->getOrder($query_params['transaction_data']['order_id']);
 			}
@@ -334,7 +337,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 					'paymazon_payment_status'	=> $query_params['new_payment_result_status'],
 				);
 				try {
-					$query_params['update_payment_result'] = $this->model_extension_payment_paymazontmnwallet->set_order_data_by('seq', $query_params['transaction_data']['seq'], $query_params['update_params']);
+					$query_params['update_payment_result'] = $this->model_extension_payment_paymazonkbankinstdyn->set_order_data_by('seq', $query_params['transaction_data']['seq'], $query_params['update_params']);
 				} catch (Exception $ex) {
 					$this->error = true;
 					$this->error_msg[] = "Exception error while update payment-result-status on redirect page: {$ex->getMessage()}";
@@ -380,16 +383,29 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		}
 	}
 	public function paymentcanceled() {
-		$this->load->model('extension/payment/paymazontmnwallet');
-		$this->load->model('checkout/order');
-		$this->language->load('extension/payment/paymazon');
-		$this->loadPaymazonLib();
-		$query_params = array(
-			'input'						=> array(),
-			'new_payment_status'		=> FALSE,
+		$this->load->language('extension/payment/paymazonkbankinstdyn');
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$data['heading_title'] = $this->language->get('heading_title');
+		$data['text_failure'] = $this->language->get('text_failure');
+
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+		$data['checkout_url'] = $this->url->link('checkout/cart');
+		$this->response->setOutput($this->load->view('extension/payment/paymazonkbankinstdyn_failed', $data));
+	}
+	//===============================================================================================================
+	public function index() {
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
+		$collectData = array(
+			'collect'			=> array(),
 		);
-		//--------------------------------------------------
-		$Paymazon = new Paymazon(Paymazon_Config::$CONFIG);
+		$collectData['collect']['order_data'] = $this->getOrderData();
+		$collectData['collect']['Paymazon'] = new Paymazon(Paymazon_Config::$CONFIG);
 		if (!$this->error) {
 			if (!isset(Paymazon_Config::$CONFIG['pg_code'])) {
 				$this->error = true;
@@ -398,22 +414,78 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		}
 		if (!$this->error) {
 			try {
-				$input_params = $Paymazon->get_php_input_request()['body'];
+				$collectData['collect']['product_data'] = $this->cart->getProducts();
 			} catch (Exception $ex) {
 				$this->error = true;
-				$this->error_msg[] = "Error exception while collectiong php input-params.";
+				$this->error_msg[] = "Exception error while get product-data from opencart class: {$ex->getMessage()}";
 			}
 		}
-		//----------------------------------------------------
-		if (isset($this->session->data['order_id'])) {
-			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 7, 'Cancel from paymazon close.');
-			$this->response->redirect($this->url->link('checkout/failure', '', true));
-		} else {
-			$this->response->redirect($this->url->link('account/login', '', true));
+		$collectData['pg_display_name'] = $this->config->get('payment_paymazonkbankinstdyn_display_name');
+		$collectData['action'] = $this->url->link('extension/payment/paymazonkbankinstdyn/smartpay', '', 'SSL');
+		$collectData['getinstallmenttenors'] = $this->url->link('extension/payment/paymazonkbankinstdyn/getinstallmenttenors', '', 'SSL');
+		$collectData['installment_data'] = array();
+		$collectData['shopids'] = $this->config->get('payment_paymazonkbankinstdyn_installment_shopids');
+		$collectData['shopid'] = $this->config->get('payment_paymazonkbankinstdyn_shopid');
+		if (is_array($collectData['shopids']) && (count($collectData['shopids']) > 0)) {
+			foreach ($collectData['shopids'] as &$keval) {
+				$keval['tenors'] = array();
+				if (isset($keval['value']) && isset($keval['terms'])) {
+					$shopid_value = $keval['value'];
+					$collectData['installment_data'][$shopid_value] = array();
+					if (is_array($keval['terms']) && count($keval['terms'])) {
+						foreach ($keval['terms'] as $val) {
+							if (isset($val['value'])) {
+								$keval['tenors'][] = $val['value'];
+								$collectData['installment_data'][$shopid_value][] = array('value' => $val['value'], 'text' => $val['text']);
+							}
+						}
+					}
+				}
+			}
 		}
+		$collectData['installment_tenors'] = $this->model_extension_payment_paymazonkbankinstdyn->getInstallmentTenors();
+		$collectData['installment_json'] = json_encode($collectData['installment_data'], JSON_UNESCAPED_SLASHES);
+		$collectData['installment_loop'] = (isset($collectData['shopids'][0]['value']) ? $collectData['shopids'][0]['value'] : 0);
+		/*
+		echo "<pre>";
+		if (!$this->error) {
+			print_r($collectData);
+		} else {
+			print_r($this->error_msg);
+		}
+		exit;
+		*/
+		$collectData['entry_installment'] = "Select Shop and Installment Terms";
+		$collectData['entry_tenor'] = "Select Installment Months";
+		
+		
+		return $this->load->view('extension/payment/paymazonkbankinstdyn_smartpay', $collectData);
 	}
-	//===============================================================================================================
-	public function index() {
+	public function getinstallmenttenors() {
+		$this->load->model('extension/payment/paymazonkbankinstdyn');
+		$installment_shopid = (isset($this->request->post['installment_shopid']) ? $this->request->post['installment_shopid'] : 0);
+		$installment_data = $this->config->get('payment_paymazonkbankinstdyn_installment_shopids');
+		$installment_string = "";
+		if (isset($installment_data)) {
+			if (is_array($installment_data) && (count($installment_data) > 0)) {
+				foreach ($installment_data as $key => $keval) {
+					if (isset($keval['value']) && isset($keval['terms'])) {
+						if ($keval['value'] == $installment_shopid) {
+							if (is_array($keval['terms']) && count($keval['terms'])) {
+								foreach ($keval['terms'] as $val) {
+									if (isset($val['value']) && isset($val['text'])) {
+										$installment_string .= "<option value='{$val['value']}'>{$val['text']}</option>";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		echo $installment_string;
+	}
+	public function smartpay() {
 		$order_data = $this->getOrderData();
 		$Paymazon = new Paymazon(Paymazon_Config::$CONFIG);
 		if (!$this->error) {
@@ -425,21 +497,28 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 		if (!$this->error) {
 			$product_data = $this->cart->getProducts();
 			foreach ($product_data as &$keval) {
-				$keval['total_with_tax'] = $this->tax->calculate($keval['total'], $keval['tax_class_id'], $this->config->get('config_tax'));
+				$keval['total_with_tax'] = $this->tax->calculate($keval['total'], $keval['tax_class_id'], TRUE);
+				//$keval['total_with_tax_default'] = $this->tax->calculate($keval['total'], $keval['tax_class_id'], $this->config->get('config_tax'));
 			}
 			$custom_params = array(
 				'url'		=> array(
-					'notify_url'		=> $this->url->link('extension/payment/paymazontmnwallet/paymentnotify', '', 'SSL'),
-					'success_url'		=> $this->url->link('extension/payment/paymazontmnwallet/paymentredirect', '', 'SSL'),
-					'failed_url'		=> $this->url->link('extension/payment/paymazontmnwallet/paymentfailed', '', 'SSL'),
-					'cancel_url'		=> $this->url->link('extension/payment/paymazontmnwallet/paymentcanceled', '', 'SSL'),
+					'notify_url'		=> $this->url->link('extension/payment/paymazonkbankinstdyn/paymentnotify', '', 'SSL'),
+					'success_url'		=> $this->url->link('extension/payment/paymazonkbankinstdyn/paymentredirect', '', 'SSL'),
+					'failed_url'		=> $this->url->link('extension/payment/paymazonkbankinstdyn/paymentfailed', '', 'SSL'),
+					'cancel_url'		=> $this->url->link('extension/payment/paymazonkbankinstdyn/paymentcanceled', '', 'SSL'),
 				),
 				'custom'	=> array(
-					'ref1'				=> $this->config->get('payment_paymazontmnwallet_custom_field1'),
-					'ref2'				=> $this->config->get('payment_paymazontmnwallet_custom_field2'),
-					'ref3'				=> $this->config->get('payment_paymazontmnwallet_custom_field3'),
+					'ref1'				=> $this->config->get('payment_paymazonkbankinstdyn_custom_field1'),
+					'ref2'				=> $this->config->get('payment_paymazonkbankinstdyn_custom_field2'),
+					'ref3'				=> $this->config->get('payment_paymazonkbankinstdyn_custom_field3'),
 				),
 			);
+			$custom_params['smartpay'] = array(
+				'shopid'				=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
+				'instmonth'				=> (isset($this->request->post['payment_paymazonkbankinstdyn_installment_instmonth']) ? $this->request->post['payment_paymazonkbankinstdyn_installment_instmonth'] : ''),
+			);
+		}
+		if (!$this->error) {
 			try {
 				$order_data['request_id'] = $Paymazon->create_new_request_id("Asia/Bangkok");
 				$Paymazon->create_payment_structure('create', Paymazon_Config::$CONFIG['pg_code'], $order_data, $custom_params, $product_data);
@@ -448,7 +527,6 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 				$this->error_msg[] = "Cannot create payment-structure with exception: {$ex->getMessage()}";
 			}
 		}
-		
 		if (!$this->error) {
 			if (!isset($this->session->data['payment_method']['code'])) {
 				$this->error = true;
@@ -456,7 +534,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 			}
 		}
 		if (!$this->error) {
-			if (strtolower($this->session->data['payment_method']['code']) === 'paymazontmnwallet') {
+			if (strtolower($this->session->data['payment_method']['code']) === 'paymazonkbankinstdyn') {
 				try {
 					$Create_Payment = $Paymazon->create_payment_request_by_curl('POST', '/create');
 				} catch (Exception $ex) {
@@ -465,7 +543,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 				}
 			} else {
 				$this->error = true;
-				$this->error_msg[] = "Payment method code from session is no paymazontmnwallet";
+				$this->error_msg[] = "Payment method code from session is no paymazonkbankinstdyn";
 			}
 		}
 		if (!$this->error) {
@@ -486,6 +564,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 			if (!isset($Create_Payment['response']['body']['payment_id']) || !isset($Create_Payment['response']['body']['request_id']) || !isset($Create_Payment['response']['body']['response']['payment']) || !isset($Create_Payment['response']['body']['redirect'])) {
 				$this->error = true;
 				$this->error_msg[] = "response payment, payment-id, request-id, and redirect should be exists from paymazon";
+				$this->error_msg[] = $Create_Payment;
 			}
 		}
 		if (!$this->error) {
@@ -497,9 +576,10 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 				'paymazon_payment_code'		=> $Create_Payment['response']['body']['response']['payment'],
 				'paymazon_payment_id'		=> $Create_Payment['response']['body']['payment_id'],
 				'paymazon_payment_status'	=> 'PROCESSING',
+				'paymazon_payment_shopid'	=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
 			);
 			try {
-				$Create_Payment['new_paymazon_data_seq'] = $this->model_extension_payment_paymazontmnwallet->insertNewPaymazonTransaction($query_orders['order_id'], $query_orders['request_id'], $query_params);
+				$Create_Payment['new_paymazon_data_seq'] = $this->model_extension_payment_paymazonkbankinstdyn->insertNewPaymazonTransaction($query_orders['order_id'], $query_orders['request_id'], $query_params);
 			} catch (Exception $ex) {
 				$this->error = true;
 				$this->error_msg[] = "Error exception while insert new payment to paymazon table: {$ex->getMessage()}";
@@ -517,15 +597,22 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 				'redirect'			=> $Create_Payment['response']['body']['redirect'],
 				'payment_id'		=> $Create_Payment['response']['body']['payment_id'],
 				'seq'				=> $Create_Payment['new_paymazon_data_seq'],
-				'pay_type'			=> 'paymazontmnwallet',
-				'pg_display_name'	=> $this->config->get('payment_paymazontmnwallet_display_name'),
+				'pay_type'			=> 'paymazonkbankinstdyn',
+				'pg_display_name'	=> $this->config->get('payment_paymazonkbankinstdyn_display_name'),
 			);
 		} else {
 			$collectData = array(
 				'errors'			=> $this->error_msg,
 			);
 		}
-		return $this->load->view('extension/payment/paymazontmnwallet', $collectData);
+		
+		
+		if (isset($collectData['redirect'])) {
+			header("Location: {$collectData['redirect']}");
+			exit;
+		} else {
+			print_r($collectData);
+		}
 	}
 	
 	

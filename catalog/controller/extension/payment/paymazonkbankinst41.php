@@ -124,13 +124,13 @@ class ControllerExtensionPaymentpaymazonkbankinst41 extends Controller {
 				$query_params['transaction_data'] = $this->model_extension_payment_paymazonkbankinst41->get_order_data_by('payment', '', $query_params['wheres']);
 			} catch (Exception $ex) {
 				$this->error = true;
-				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id";
+				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id (Query data)";
 			}
 		}
 		if (!$this->error) {
 			if (!isset($query_params['transaction_data']['paymazon_payment_status']) || !isset($query_params['transaction_data']['order_id'])) {
 				$this->error = true;
-				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty.";
+				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty (Query Data).";
 			} else {
 				switch (strtoupper($query_params['transaction_data']['paymazon_payment_status'])) {
 					case 'FAILED':
@@ -263,13 +263,14 @@ class ControllerExtensionPaymentpaymazonkbankinst41 extends Controller {
 				$query_params['transaction_data'] = $this->model_extension_payment_paymazonkbankinst41->get_order_data_by('payment', '', $query_params['wheres']);
 			} catch (Exception $ex) {
 				$this->error = true;
-				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id";
+				$this->error_msg[] = "Cannot get data of paymazon transaction by payment-id (payment redirect): {$ex->getMessage()}";
 			}
 		}
 		if (!$this->error) {
 			if (!isset($query_params['transaction_data']['paymazon_payment_status']) || !isset($query_params['transaction_data']['order_id'])) {
 				$this->error = true;
-				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty.";
+				$this->error_msg[] = "Paymazon payment-status and order-id from database cannot be empty (Record Queried Data).";
+				$this->error_msg[] = $query_params;
 			} else {
 				$query_params['order_data'] = $this->model_checkout_order->getOrder($query_params['transaction_data']['order_id']);
 			}
@@ -593,6 +594,7 @@ class ControllerExtensionPaymentpaymazonkbankinst41 extends Controller {
 			$query_params = array(
 				'paymazon_payment_code'		=> $Create_Payment['response']['body']['response']['payment'],
 				'paymazon_payment_id'		=> $Create_Payment['response']['body']['payment_id'],
+				'paymazon_payment_shopid'	=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
 				'paymazon_payment_status'	=> 'PROCESSING',
 			);
 			try {

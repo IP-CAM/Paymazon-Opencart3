@@ -574,6 +574,7 @@ class ControllerExtensionPaymentpaymazonkbankinst42 extends Controller {
 			$query_params = array(
 				'paymazon_payment_code'		=> $Create_Payment['response']['body']['response']['payment'],
 				'paymazon_payment_id'		=> $Create_Payment['response']['body']['payment_id'],
+				'paymazon_payment_shopid'	=> $this->config->get('payment_paymazonkbankinstdyn_shopid'),
 				'paymazon_payment_status'	=> 'PROCESSING',
 			);
 			try {

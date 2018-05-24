@@ -487,6 +487,7 @@ class ControllerExtensionPaymentpaymazontmnwallet extends Controller {
 			if (!isset($Create_Payment['response']['body']['payment_id']) || !isset($Create_Payment['response']['body']['request_id']) || !isset($Create_Payment['response']['body']['response']['payment']) || !isset($Create_Payment['response']['body']['redirect'])) {
 				$this->error = true;
 				$this->error_msg[] = "response payment, payment-id, request-id, and redirect should be exists from paymazon";
+				//$this->error_msg[] = json_encode($Create_Payment, JSON_PRETTY_PRINT);
 			}
 		}
 		if (!$this->error) {

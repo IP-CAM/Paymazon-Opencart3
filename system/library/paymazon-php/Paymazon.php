@@ -50,13 +50,13 @@ Class Paymazon {
 		switch ($server_mode) {
 			case 'live':
 			case 'production':
-				$url = 'https://payment.paymazon.com/version/v1/myarena/';
+				$url = 'https://payment.paymazon.com/payments/v1/myarena/';
 			break;
 			case 'development':
 			case 'sandbox':
 			case 'test':
 			default:
-				$url = 'https://payment.nababan.net/version/v1/myarena/';
+				$url = 'https://dev-api.paymazon.com/payments/v1/myarena/';
 			break;
 		}
 		return filter_var($url, FILTER_VALIDATE_URL);

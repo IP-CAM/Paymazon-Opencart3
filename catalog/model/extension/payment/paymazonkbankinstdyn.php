@@ -5,13 +5,13 @@
 * https://payment.paymazon.com
 */
 
-class ModelExtensionPaymentpaymazonkbankinst41 extends Model {
+class ModelExtensionPaymentpaymazonkbankinstdyn extends Model {
     public function getMethod($address, $total) {
         $this->load->language('extension/payment/paymazon');
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_paymazonkbankinst41_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
-        if ($this->config->get('payment_paymazonkbankinst41_minimum_total') > 0 && $this->config->get('payment_paymazonkbankinst41_minimum_total') > $total) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_paymazonkbankinstdyn_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        if ($this->config->get('payment_paymazonkbankinstdyn_minimum_total') > 0 && $this->config->get('payment_paymazonkbankinstdyn_minimum_total') > $total) {
             $status = false;
-        } elseif (!$this->config->get('payment_paymazonkbankinst41_geo_zone_id')) {
+        } elseif (!$this->config->get('payment_paymazonkbankinstdyn_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -21,10 +21,10 @@ class ModelExtensionPaymentpaymazonkbankinst41 extends Model {
         $method_data = array();
         if ($status) {
             $method_data = array(
-                'code'				=> 'paymazonkbankinst41',
-                'title'				=> $this->config->get('payment_paymazonkbankinst41_display_name'),
+                'code'				=> 'paymazonkbankinstdyn',
+                'title'				=> $this->config->get('payment_paymazonkbankinstdyn_display_name'),
                 'terms'				=> '',
-                'sort_order'		=> $this->config->get('payment_paymazonkbankinst41_sort_order')
+                'sort_order'		=> $this->config->get('payment_paymazonkbankinstdyn_sort_order')
             );
         }
         return $method_data;
@@ -53,11 +53,11 @@ class ModelExtensionPaymentpaymazonkbankinst41 extends Model {
 			break;
 			case 'payment':
 				if (count($query_wheres) > 0) {
-					$sql .= " (";
+					$sql .= "(";
 					$for_i = 0;
 					foreach ($query_wheres as $key => $val) {
 						if ($for_i === 0) {
-							$sql .= sprintf("%s = '%s'", $this->db->escape($key), $this->db->escape($val));
+							$sql .= sprintf(" %s = '%s'", $this->db->escape($key), $this->db->escape($val));
 						} else {
 							$sql .= sprintf(" AND %s = '%s'", $this->db->escape($key), $this->db->escape($val));
 						}
@@ -70,7 +70,6 @@ class ModelExtensionPaymentpaymazonkbankinst41 extends Model {
 				$sql .= sprintf(" LOWER(paymazon_payment_code) = LOWER('%s')", $this->db->escape($by_value));
 			break;
 		}
-		$sql .= " ORDER BY paymazon_datetime_insert DESC";
 		$sql .= " LIMIT 1";
 		$result = $this->db->query($sql)->row;
 		if (!$result) {
@@ -123,16 +122,16 @@ class ModelExtensionPaymentpaymazonkbankinst41 extends Model {
 		$request_id = (is_string($request_id) ? sprintf('%s', $request_id) : '');
 		$query_params = array(
 			'paymazon_payment_code'			=> (isset($input_params['paymazon_payment_code']) ? $input_params['paymazon_payment_code'] : ''),
-			'paymazon_payment_shopid'		=> (isset($input_params['paymazon_payment_shopid']) ? $input_params['paymazon_payment_shopid'] : '41'),
+			'paymazon_payment_shopid'		=> (isset($input_params['paymazon_payment_shopid']) ? $input_params['paymazon_payment_shopid'] : ''),
 			'paymazon_payment_id'			=> (isset($input_params['paymazon_payment_id']) ? $input_params['paymazon_payment_id'] : ''),
 			'paymazon_payment_status'		=> (isset($input_params['paymazon_payment_status']) ? $input_params['paymazon_payment_status'] : ''),
 		);
 		$query_params['paymazon_payment_code'] = (is_string($query_params['paymazon_payment_code']) || is_numeric($query_params['paymazon_payment_code'])) ? sprintf("%s", $query_params['paymazon_payment_code']) : '';
-		$query_params['paymazon_payment_shopid'] = (is_string($query_params['paymazon_payment_shopid']) || is_numeric($query_params['paymazon_payment_shopid'])) ? sprintf("%d", $query_params['paymazon_payment_shopid']) : '41';
+		$query_params['paymazon_payment_shopid'] = (is_string($query_params['paymazon_payment_shopid']) || is_numeric($query_params['paymazon_payment_shopid'])) ? sprintf("%s", $query_params['paymazon_payment_shopid']) : '';
 		$query_params['paymazon_payment_id'] = (is_string($query_params['paymazon_payment_id']) || is_numeric($query_params['paymazon_payment_id'])) ? sprintf("%s", $query_params['paymazon_payment_id']) : '';
 		$query_params['paymazon_payment_status'] = (is_string($query_params['paymazon_payment_status']) || is_numeric($query_params['paymazon_payment_status'])) ? sprintf("%s", $query_params['paymazon_payment_status']) : '';
 		
-		$sql = sprintf("INSERT INTO %s(order_id, request_id, paymazon_payment_code, paymazon_payment_shopid, paymazon_payment_id, paymazon_payment_status, paymazon_datetime_insert, paymazon_datetime_update) VALUES('%s', '%s', '%s', '%d', '%s', '%s', NOW(), NOW())",
+		$sql = sprintf("INSERT INTO %s(order_id, request_id, paymazon_payment_code, paymazon_payment_shopid, paymazon_payment_id, paymazon_payment_status, paymazon_datetime_insert, paymazon_datetime_update) VALUES('%s', '%s', '%s', '%s', '%s', '%s', NOW(), NOW())",
 			DB_PREFIX . 'payment_paymazon',
 			$this->db->escape($order_id),
 			$this->db->escape($request_id),
